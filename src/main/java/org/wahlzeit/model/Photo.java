@@ -88,7 +88,12 @@ public class Photo extends DataObject {
 	 * 
 	 */
 	protected long creationTime = System.currentTimeMillis();
-	
+
+	/**
+	 * 
+	 */
+	protected Location location = null;
+
 	/**
 	 * 
 	 */
@@ -168,7 +173,7 @@ public class Photo extends DataObject {
 		rset.updateInt("status", status.asInt());
 		rset.updateInt("praise_sum", praiseSum);
 		rset.updateInt("no_votes", noVotes);
-		rset.updateLong("creation_time", creationTime);		
+		rset.updateLong("creation_time", creationTime);
 	}
 
 	/**
@@ -301,7 +306,23 @@ public class Photo extends DataObject {
 		ownerHomePage = newHomePage;
 		incWriteCount();
 	}
-	
+
+	/**
+	 * 
+	 * @methodtype set
+	 */
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
+	/**
+	 * 
+	 * @methodtype get
+	 */
+    public Location getLocation() {
+        return this.location;
+    }
+
 	/**
 	 * 
 	 * @methodtype boolean-query
