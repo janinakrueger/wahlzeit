@@ -66,4 +66,29 @@ public class Coordinate {
     public void setZ(double z) {
         this.z = z;
 	}
+
+	protected double getDistance(Coordinate c) {
+		double diffX = this.getX() - c.getX();
+		double diffY = this.getY() - c.getY();
+		double diffZ = this.getZ() - c.getZ();
+		return Math.sqrt(diffX*diffX + diffY*diffY + diffZ*diffZ);
+	}
+
+
+	protected boolean isEqual(Coordinate c) {
+		return this.getDistance(c) <= 0.0001;
+	}
+
+
+    @Override 
+	public boolean equals(Object o) {
+        if (o == this) {
+            return true;
+		}
+        if (!(o instanceof Coordinate)) {
+            return false;
+		}
+		Coordinate c = (Coordinate) o;
+        return this.isEqual(c);
+    }
 }
