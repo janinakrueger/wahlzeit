@@ -1,7 +1,10 @@
 package org.wahlzeit.model;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.verify;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -9,6 +12,7 @@ import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import org.mockito.Mockito;
 
 @RunWith(Enclosed.class)
 public class CoordinateTest {
@@ -51,6 +55,30 @@ public class CoordinateTest {
             boolean e = coordinate.equals(coordinate);
             assertEquals(e, true);
         }
+
+        @Test
+        public void testWriteOn() throws SQLException {
+            Coordinate coordinate = new Coordinate(2,4,6);
+            ResultSet rset = Mockito.mock(ResultSet.class);
+    
+            coordinate.writeOn(rset);
+    
+            verify(rset, Mockito.times(1)).updateDouble("x_coordinate", 2);
+            verify(rset, Mockito.times(1)).updateDouble("y_coordinate", 4);
+            verify(rset, Mockito.times(1)).updateDouble("z_coordinate", 6);
+        }
+    
+        @Test
+        public void testReadFrom() throws SQLException {
+            Coordinate coordinate = new Coordinate(2,4,6);
+            ResultSet rset = Mockito.mock(ResultSet.class);
+    
+            coordinate.readFrom(rset);
+    
+            verify(rset, Mockito.times(1)).getDouble("x_coordinate");
+            verify(rset, Mockito.times(1)).getDouble("y_coordinate");
+            verify(rset, Mockito.times(1)).getDouble("z_coordinate");
+        }
     }
 
     @RunWith(Parameterized.class)
@@ -81,7 +109,8 @@ public class CoordinateTest {
         public void testGetDistance() {
             Coordinate coordinate = new Coordinate(0.0, 0.0, 0.0);
             double dist = coordinate.getDistance(c);
-            assertEquals(dist, distance, 0.0001);
+            double epsilon = 0.0001;
+            assertEquals(dist, distance, epsilon);
         }
 
         @Test
