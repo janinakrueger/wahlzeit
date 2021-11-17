@@ -32,7 +32,10 @@ CREATE TABLE photos (
 	creation_time bigint,
 	x_coordinate numeric,
 	y_coordinate numeric,
-	z_coordinate numeric
+	z_coordinate numeric,
+	phi numeric,
+	theta numeric,
+	radius numeric
 );
 
 CREATE TABLE tags (

@@ -7,7 +7,7 @@ import org.wahlzeit.services.SysLog;
 
 public class LandscapePhotoFactory extends PhotoFactory {
 
-	private static LandscapePhotoFactory instance = null;
+	private static PhotoFactory instance = null;
 
     /**
      * @methodtype constructor
@@ -19,7 +19,7 @@ public class LandscapePhotoFactory extends PhotoFactory {
     /**
 	 * Public singleton access method.
 	 */
-	public static synchronized LandscapePhotoFactory getInstance() {
+	public static synchronized PhotoFactory getInstance() {
 		if (instance == null) {
 			SysLog.logSysInfo("setting generic LandscapePhotoFactory");
 			setInstance(new LandscapePhotoFactory());
@@ -30,18 +30,18 @@ public class LandscapePhotoFactory extends PhotoFactory {
 	/**
 	 * Method to set the singleton instance of PhotoFactory.
 	 */
-	protected static synchronized void setInstance(LandscapePhotoFactory landscapePhotoFactory) {
+	protected static synchronized void setInstance(PhotoFactory photoFactory) {
 		if (instance != null) {
 			throw new IllegalStateException("attempt to initialize LandscapePhotoFactory twice");
 		}
-		instance = landscapePhotoFactory;
+		instance = photoFactory;
 	}
 
     /**
 	 * @methodtype factory
 	 */
     @Override
-	public LandscapePhoto createPhoto() {
+	public Photo createPhoto() {
 		return new LandscapePhoto(); 
 	}
 	
@@ -49,7 +49,7 @@ public class LandscapePhotoFactory extends PhotoFactory {
 	 * 
 	 */
     @Override
-	public LandscapePhoto createPhoto(PhotoId id) {
+	public Photo createPhoto(PhotoId id) {
 		return new LandscapePhoto(id);
 	}
 	
@@ -57,7 +57,7 @@ public class LandscapePhotoFactory extends PhotoFactory {
 	 * 
 	 */
     @Override
-	public LandscapePhoto createPhoto(ResultSet rs) throws SQLException {
+	public Photo createPhoto(ResultSet rs) throws SQLException {
 		return new LandscapePhoto(rs);
 	}
 	

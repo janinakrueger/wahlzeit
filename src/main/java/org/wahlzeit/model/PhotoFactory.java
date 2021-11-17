@@ -24,8 +24,8 @@ public class PhotoFactory {
 	 */
 	public static synchronized PhotoFactory getInstance() {
 		if (instance == null) {
-			SysLog.logSysInfo("setting generic PhotoFactory");
-			setInstance(new PhotoFactory());
+			SysLog.logSysInfo("setting specific PhotoFactory");
+			setInstance(new LandscapePhotoFactory());
 		}
 		
 		return instance;
