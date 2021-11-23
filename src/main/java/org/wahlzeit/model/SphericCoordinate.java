@@ -1,13 +1,10 @@
 package org.wahlzeit.model;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Objects;
 
-import org.wahlzeit.services.DataObject;
-
-public class SphericCoordinate extends DataObject implements Coordinate {
+public class SphericCoordinate extends AbstractCoordinate {
  	/**
 	 * Spheric coordinates
 	 */
@@ -70,15 +67,6 @@ public class SphericCoordinate extends DataObject implements Coordinate {
 	}
 
 	/**
-	 * @methodtype boolean query method
-	 */
-    @Override 
-	public boolean isEqual(Coordinate c) {
-        CartesianCoordinate cartesianCoordinate = c.asCartesianCoordinate();
-		return cartesianCoordinate.isEqual(this);
-	}
-
-	/**
 	 * 
 	 */
     @Override 
@@ -98,7 +86,11 @@ public class SphericCoordinate extends DataObject implements Coordinate {
 	 */
 	@Override
 	public int hashCode() {
-		return Objects.hash(phi,theta,radius); 
+		CartesianCoordinate cartesianCoordinate = this.asCartesianCoordinate();
+		double x = cartesianCoordinate.getX();
+		double y = cartesianCoordinate.getY();
+		double z = cartesianCoordinate.getZ();
+		return Objects.hash(x,y,z); 
 	}
 
 	/**
@@ -122,26 +114,10 @@ public class SphericCoordinate extends DataObject implements Coordinate {
 	}
 
 	/**
-	 * 
-	 */
-	@Override
-	public void writeId(PreparedStatement stmt, int pos) throws SQLException { 
-		
-	}
-
-	/**
-	 * 
-	 */
-	@Override
-	public String getIdAsString() {
-		return "id";
-	}
-
-	/**
 	 * @methodtype conversion
 	 */
     @Override 
-    public CartesianCoordinate asCartesianCoordinate() {
+    public CartesianCoordinate asCartesianCoordinate() throws ArithmeticException {
         double x = radius*Math.sin(theta)*Math.cos(phi);
         double y = radius*Math.sin(theta)*Math.sin(phi);
         double z = radius*Math.cos(theta);
@@ -150,30 +126,11 @@ public class SphericCoordinate extends DataObject implements Coordinate {
 	}
 
 	/**
-	 * @methodtype get
-	 */
-    @Override 
-    public double getCartesianDistance(Coordinate coordinate) {
-		return asCartesianCoordinate().getCartesianDistance(coordinate);
-	}
-    
-	/**
 	 * @methodtype conversion
 	 */
     @Override 
     public SphericCoordinate asSphericCoordinate() {
 		return this;
-	}
-    
-	/**
-	 * @methodtype get
-	 */
-    @Override 
-    public double getCentralAngle(Coordinate coordinate) {
-        SphericCoordinate sphericCoordinate = coordinate.asSphericCoordinate();
-        double longituteDelta = Math.abs(phi - sphericCoordinate.phi);
-        double centralAngle = Math.acos(Math.sin(theta)*Math.sin(sphericCoordinate.theta) + Math.cos(theta)*Math.cos(sphericCoordinate.theta)*Math.cos(longituteDelta));
-        return centralAngle;
 	}
 
 }

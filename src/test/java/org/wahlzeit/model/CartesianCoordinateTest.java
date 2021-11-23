@@ -20,13 +20,6 @@ public class CartesianCoordinateTest {
     public static class NotParametrized{
 
         @Test
-        public void testGetDistanceSelf() {
-            CartesianCoordinate coordinate = new CartesianCoordinate(0.0, 0.0, 0.0);
-            double dist = coordinate.getDistance(coordinate);
-            assertEquals(dist, 0.0, 0.0001);
-        }
-
-        @Test
         public void testIsEqualSelf() {
             Coordinate coordinate = new CartesianCoordinate(0.0, 0.0, 0.0);
             boolean e = coordinate.isEqual(coordinate);
@@ -94,15 +87,6 @@ public class CartesianCoordinateTest {
                 {new CartesianCoordinate(0.0,0.0,3.0), false, 3.0},
                 {new CartesianCoordinate(2.0,2.0,1.0), false, 3.0}
             });
-        }
-
-
-        @Test
-        public void testGetDistance() {
-            CartesianCoordinate coordinate = new CartesianCoordinate(0.0, 0.0, 0.0);
-            double dist = coordinate.getDistance(c);
-            double epsilon = 0.0001;
-            assertEquals(dist, distance, epsilon);
         }
 
         @Test

@@ -1,17 +1,14 @@
 package org.wahlzeit.model;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Objects;
-
-import org.wahlzeit.services.DataObject;
 
 /**
  * Cartesian coordinates of a location.
  */
 
-public class CartesianCoordinate extends DataObject implements Coordinate { 
+public class CartesianCoordinate extends AbstractCoordinate { 
 
 	/**
 	 * Cartesian coordinates
@@ -19,7 +16,6 @@ public class CartesianCoordinate extends DataObject implements Coordinate {
 	private double x;
     private double y;
     private double z;
-	private static final double EPSILON = 0.0001;
 
 	public CartesianCoordinate(double x, double y, double z) {
 		setX(x);
@@ -78,25 +74,6 @@ public class CartesianCoordinate extends DataObject implements Coordinate {
 	/**
 	 * 
 	 */
-	protected double getDistance(CartesianCoordinate c) {
-		double diffX = this.getX() - c.getX();
-		double diffY = this.getY() - c.getY();
-		double diffZ = this.getZ() - c.getZ();
-		return Math.sqrt(diffX*diffX + diffY*diffY + diffZ*diffZ);
-	}
-
-	/**
-	 * @methodtype boolean query method
-	 */
-	@Override 
-	public boolean isEqual(Coordinate c) {
-		CartesianCoordinate cartesianCoordinate = c.asCartesianCoordinate();
-		return this.getDistance(cartesianCoordinate) <= EPSILON;
-	}
-
-	/**
-	 * 
-	 */
     @Override 
 	public boolean equals(Object o) {
         if (o == this) {
@@ -138,56 +115,28 @@ public class CartesianCoordinate extends DataObject implements Coordinate {
 	}
 
 	/**
-	 * 
-	 */
-	@Override
-	public void writeId(PreparedStatement stmt, int pos) throws SQLException {
-		
-	}
-
-	/**
-	 * 
-	 */
-	@Override
-	public String getIdAsString() {
-		return "id";
-	}
-
-	/**
 	 * @methodtype conversion
 	 */
 	@Override 
     public CartesianCoordinate asCartesianCoordinate() {
 		return this;
 	}
-
-	/**
-	 * @methodtype get
-	 */
-	@Override 
-    public double getCartesianDistance(Coordinate coordinate) {
-		CartesianCoordinate cartesianCoordinate = coordinate.asCartesianCoordinate();
-		return getDistance(cartesianCoordinate);
-	}
     
 	/**
 	 * @methodtype conversion
 	 */
 	@Override 
-    public SphericCoordinate asSphericCoordinate() {
+    public SphericCoordinate asSphericCoordinate() throws ArithmeticException {
         double radius = Math.sqrt(x*x + y*y + z*z);
+		boolean isOrigin = radius <= EPSILON;
+		// prevent dividing by 0
+		if(isOrigin) {
+			return new SphericCoordinate(0, 0, 0);
+		}
         double theta = Math.acos(z/radius);
         double phi = Math.atan2(y,x);
         SphericCoordinate sphericCoordinate = new SphericCoordinate(phi, theta, radius);
         return sphericCoordinate;
-	}
-    
-	/**
-	 * @methodtype get
-	 */
-	@Override 
-    public double getCentralAngle(Coordinate coordinate) {
-		return asSphericCoordinate().getCentralAngle(coordinate);
 	}
 
 }
