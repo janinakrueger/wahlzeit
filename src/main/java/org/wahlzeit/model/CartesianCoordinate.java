@@ -21,6 +21,8 @@ public class CartesianCoordinate extends AbstractCoordinate {
 		setX(x);
 		setY(y);
 		setZ(z);
+
+		assertClassInvariants();
 	}
 
 	/**
@@ -36,7 +38,9 @@ public class CartesianCoordinate extends AbstractCoordinate {
 	 * @methodtype set
 	 */
     public void setX(double x) {
+		assertIsValidParameter(x);
         this.x = x;
+		assertClassInvariants();
 	}
 
 	/**
@@ -52,7 +56,9 @@ public class CartesianCoordinate extends AbstractCoordinate {
 	 * @methodtype set
 	 */
     public void setY(double y) {
+		assertIsValidParameter(y);
         this.y = y;
+		assertClassInvariants();
 	}
 
 	/**
@@ -68,23 +74,10 @@ public class CartesianCoordinate extends AbstractCoordinate {
 	 * @methodtype set
 	 */
     public void setZ(double z) {
+		assertIsValidParameter(z);
         this.z = z;
+		assertClassInvariants();
 	}
-
-	/**
-	 * 
-	 */
-    @Override 
-	public boolean equals(Object o) {
-        if (o == this) {
-            return true;
-		}
-        if (!(o instanceof CartesianCoordinate)) {
-            return false;
-		}
-		CartesianCoordinate c = (CartesianCoordinate) o;
-        return this.isEqual(c);
-    }
 
 	/**
 	 * 
@@ -92,6 +85,18 @@ public class CartesianCoordinate extends AbstractCoordinate {
 	@Override
 	public int hashCode() {
 		return Objects.hash(x,y,z);
+	}
+
+	/**
+	 * @methodtype boolean query method
+	 */
+	@Override 
+	public boolean isEqual(Coordinate coordinate) {
+		assertClassInvariants();
+        // Check if distance of two coordinates is small, which means that they represent the same point.
+		boolean isEqual = getCartesianDistance(coordinate) <= EPSILON;
+		assertClassInvariants();
+		return isEqual;
 	}
 
 	/**
@@ -127,6 +132,7 @@ public class CartesianCoordinate extends AbstractCoordinate {
 	 */
 	@Override 
     public SphericCoordinate asSphericCoordinate() throws ArithmeticException {
+		assertClassInvariants();
         double radius = Math.sqrt(x*x + y*y + z*z);
 		boolean isOrigin = radius <= EPSILON;
 		// prevent dividing by 0
@@ -136,7 +142,48 @@ public class CartesianCoordinate extends AbstractCoordinate {
         double theta = Math.acos(z/radius);
         double phi = Math.atan2(y,x);
         SphericCoordinate sphericCoordinate = new SphericCoordinate(phi, theta, radius);
+
+		assertIsNonNullArgument(sphericCoordinate);
+		assertClassInvariants();
         return sphericCoordinate;
+	}
+
+	/**
+	 * @methodtype get
+	 */
+    @Override 
+    public double getCartesianDistance(Coordinate coordinate) {
+		assertClassInvariants();
+
+		// for calculation use x, y, z Attributes of CartesianCoordinate
+        CartesianCoordinate cartesianCoordinate = coordinate.asCartesianCoordinate();
+	
+		double diffX = cartesianCoordinate.getX() - getX();
+		double diffY = cartesianCoordinate.getY() - getY();
+		double diffZ = cartesianCoordinate.getZ() - getZ();
+		double distance = Math.sqrt(diffX*diffX + diffY*diffY + diffZ*diffZ);
+
+		assertClassInvariants();
+		return distance;
+	}
+
+	/**
+	 * @methodtype assertion
+	 */
+	protected void assertIsValidParameter(double parameter) {
+		assert !Double.isNaN(parameter) : "Parameter is NaN.";
+		assert Double.isFinite(parameter) : "Parameter is not finite.";
+	}
+
+	/**
+	 * @methodtype assertion
+	 */
+	@Override
+	protected void assertClassInvariants() {
+		super.assertClassInvariants();
+		assertIsValidParameter(x);
+		assertIsValidParameter(y);
+		assertIsValidParameter(z);
 	}
 
 }
