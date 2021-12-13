@@ -14,7 +14,8 @@ public class Location extends DataObject {
 
     protected Coordinate coordinate;
 
-	public Location(Coordinate coordinate){
+	public Location(Coordinate coordinate) throws NullPointerException {
+		assertIsNonNullArgument(coordinate);
 		setCoordinate(coordinate);
 	}
 
@@ -73,5 +74,15 @@ public class Location extends DataObject {
 	@Override
 	public String getIdAsString() {
 		return "id";
+	}
+
+	/**
+	 * @methodtype assertion
+	 */
+	// Method used to check if null argument is given as a parameter to methods
+	protected void assertIsNonNullArgument(Object o) throws NullPointerException {
+		if (o == null) {
+			throw new NullPointerException("The input is null.");
+		}
 	}
 }

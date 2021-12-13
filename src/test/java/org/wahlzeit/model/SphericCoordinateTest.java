@@ -63,17 +63,17 @@ public class SphericCoordinateTest {
             CartesianCoordinate cartesianCoordinate = coordinate.asCartesianCoordinate();
             assertEquals(new CartesianCoordinate(2, 4, 6), cartesianCoordinate);
         }
-        @Test(expected = AssertionError.class)
+        @Test(expected = IllegalArgumentException.class)
         public void testInvalidPhi() {
             SphericCoordinate coordinate = new SphericCoordinate(-200,4,6);
         }
 
-        @Test(expected = AssertionError.class)
+        @Test(expected = IllegalArgumentException.class)
         public void testInvalidTheta() {
             SphericCoordinate coordinate = new SphericCoordinate(2,200,6);
         }
 
-        @Test(expected = AssertionError.class)
+        @Test(expected = IllegalArgumentException.class)
         public void testInvalidRadius() {
             SphericCoordinate coordinate = new SphericCoordinate(2,4,-0.1);
         }

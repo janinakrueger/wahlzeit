@@ -12,7 +12,8 @@ public class SphericCoordinate extends AbstractCoordinate {
     private double theta;
     private double radius;
 
-	public SphericCoordinate(double phi, double theta, double radius) {
+	// show thrown unchecked exception in signature for clarity
+	public SphericCoordinate(double phi, double theta, double radius) throws IllegalArgumentException {
 		setPhi(phi);
 		setTheta(theta);
 		setRadius(radius);
@@ -32,7 +33,7 @@ public class SphericCoordinate extends AbstractCoordinate {
 	 * 
 	 * @methodtype set
 	 */
-    public void setPhi(double phi) {
+    public void setPhi(double phi) throws IllegalArgumentException {
 		assertIsValidPhi(phi);
         this.phi = phi;
 		assertClassInvariants();
@@ -50,7 +51,7 @@ public class SphericCoordinate extends AbstractCoordinate {
 	 * 
 	 * @methodtype set
 	 */
-    public void setTheta(double theta) {
+    public void setTheta(double theta) throws IllegalArgumentException {
 		assertIsValidTheta(theta);
         this.theta = theta;
 		assertClassInvariants();
@@ -68,7 +69,7 @@ public class SphericCoordinate extends AbstractCoordinate {
 	 * 
 	 * @methodtype set
 	 */
-    public void setRadius(double radius) {
+    public void setRadius(double radius) throws IllegalArgumentException {
 		assertIsValidRadius(radius);
         this.radius = radius;
 		assertClassInvariants();
@@ -79,9 +80,11 @@ public class SphericCoordinate extends AbstractCoordinate {
 	 */
 	@Override
 	public void writeOn(ResultSet rset) throws SQLException { 
+		assertClassInvariants();
 		rset.updateDouble("phi", phi);
 		rset.updateDouble("theta", theta);
 		rset.updateDouble("radius", radius);
+		assertClassInvariants();
 	}
 
 	/**
@@ -89,16 +92,18 @@ public class SphericCoordinate extends AbstractCoordinate {
 	 */
 	@Override
 	public void readFrom(ResultSet rset) throws SQLException {
+		assertClassInvariants();
 		rset.getDouble("phi");
 		rset.getDouble("theta");
 		rset.getDouble("radius");
+		assertClassInvariants();
 	}
 
 	/**
 	 * @methodtype conversion
 	 */
     @Override 
-    public CartesianCoordinate asCartesianCoordinate() throws ArithmeticException {
+    public CartesianCoordinate asCartesianCoordinate() throws ArithmeticException, IllegalArgumentException, NullPointerException {
 		assertClassInvariants();
         double x = radius*Math.sin(theta)*Math.cos(phi);
         double y = radius*Math.sin(theta)*Math.sin(phi);
@@ -122,7 +127,7 @@ public class SphericCoordinate extends AbstractCoordinate {
 	 * @methodtype get
 	 */
     @Override 
-    public double getCentralAngle(Coordinate coordinate) {
+    public double getCentralAngle(Coordinate coordinate) throws IllegalArgumentException {
 		assertClassInvariants();
 
 		// for calculation use phi, theta, radius Attributes of SphericCoordinate
@@ -138,29 +143,35 @@ public class SphericCoordinate extends AbstractCoordinate {
 	/**
 	 * @methodtype assertion
 	 */
-	protected void assertIsValidPhi(double phi) {
-		assert phi > -180 && phi <= 180 : "Phi is not in the range (-180,180].";
+	protected void assertIsValidPhi(double phi) throws IllegalArgumentException {
+		if (phi < -180 || phi > 180) {
+			throw new IllegalArgumentException("Phi is not in the range (-180,180].");
+		}
 	}
 
 	/**
 	 * @methodtype assertion
 	 */
-	protected void assertIsValidTheta(double theta) {
-		assert theta >= 0 && theta <= 180 : "Theta is not in the range [0,180].";
+	protected void assertIsValidTheta(double theta) throws IllegalArgumentException {
+		if (theta < 0 || theta > 180) {
+			throw new IllegalArgumentException("Theta is not in the range [0,180].");
+		}
 	}
 
 	/**
 	 * @methodtype assertion
 	 */
-	protected void assertIsValidRadius(double radius) {
-		assert radius >= 0 : "Radius is negative.";
+	protected void assertIsValidRadius(double radius) throws IllegalArgumentException {
+		if (radius < 0) {
+			throw new IllegalArgumentException("Radius is negative.");
+		}
 	}
 
 	/**
 	 * @methodtype assertion
 	 */
 	@Override
-	protected void assertClassInvariants() {
+	protected void assertClassInvariants() throws IllegalArgumentException {
 		super.assertClassInvariants();
 		assertIsValidPhi(phi);
 		assertIsValidTheta(theta);

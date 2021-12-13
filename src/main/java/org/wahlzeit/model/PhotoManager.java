@@ -174,10 +174,15 @@ public class PhotoManager extends ObjectManager {
 	/**
 	 * 
 	 */
-	public void savePhoto(Photo photo) {
+	public void savePhoto(Photo photo) throws ManagerCheckedException {
 		try {
 			PreparedStatement stmt = getUpdatingStatement("SELECT * FROM photos WHERE id = ?");
-			updateObject(photo, stmt);
+			try{
+				updateObject(photo, stmt);
+			}
+			catch(IllegalArgumentException e) { // catch unchecked IllegalArgumentException which is thrown from class invariants of coordinate class
+				throw new ManagerCheckedException(e.getMessage());
+			}
 		} catch (SQLException sex) {
 			SysLog.logThrowable(sex);
 		}
@@ -186,10 +191,15 @@ public class PhotoManager extends ObjectManager {
 	/**
 	 * 
 	 */
-	public void savePhotos() {
+	public void savePhotos() throws ManagerCheckedException {
 		try {
 			PreparedStatement stmt = getUpdatingStatement("SELECT * FROM photos WHERE id = ?");
-			updateObjects(photoCache.values(), stmt);
+			try{
+				updateObjects(photoCache.values(), stmt);
+			}
+			catch(IllegalArgumentException e) { // catch unchecked IllegalArgumentException which is thrown from class invariants of coordinate class
+				throw new ManagerCheckedException(e.getMessage());
+			}
 		} catch (SQLException sex) {
 			SysLog.logThrowable(sex);
 		}

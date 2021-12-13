@@ -40,4 +40,11 @@ public class PhotoTest {
 
         verify(location, Mockito.times(1)).readFrom(rset);
     }
+
+    @Test(expected = NullPointerException.class)
+    public void testNullArgument() {
+        Photo photo = new Photo();
+        Photo photo_null = null;
+        photo.hasSameOwner(photo_null);
+    }
 }

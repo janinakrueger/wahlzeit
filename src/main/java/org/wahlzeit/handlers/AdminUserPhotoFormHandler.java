@@ -52,7 +52,13 @@ public class AdminUserPhotoFormHandler extends AbstractWebFormHandler {
 		photo.setStatus(PhotoStatus.getFromString(status));
 
 		PhotoManager pm = PhotoManager.getInstance();
-		pm.savePhoto(photo);
+		// handle checked exception from PhotoManager class
+		try{
+			pm.savePhoto(photo);
+		}
+		catch(ManagerCheckedException e) {
+			System.out.println(e.getMessage());
+		}
 		
 		StringBuffer sb = UserLog.createActionEntry("AdminUserPhoto");
 		UserLog.addUpdatedObject(sb, "Photo", photo.getId().asString());

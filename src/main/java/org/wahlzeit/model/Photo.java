@@ -343,7 +343,8 @@ public class Photo extends DataObject {
 	 * 
 	 * @methodtype boolean-query
 	 */
-	public boolean hasSameOwner(Photo photo) {
+	public boolean hasSameOwner(Photo photo) throws NullPointerException {
+		assertIsNonNullArgument(photo);
 		return photo.getOwnerEmailAddress().equals(ownerEmailAddress);
 	}
 
@@ -405,7 +406,8 @@ public class Photo extends DataObject {
 	 * 
 	 * @methodtype boolean-query
 	 */
-	public boolean hasPhotoSize(PhotoSize size) {
+	public boolean hasPhotoSize(PhotoSize size) throws NullPointerException {
+		assertIsNonNullArgument(size);
 		return maxPhotoSize.asInt() >= size.asInt();
 	}
 	
@@ -429,7 +431,8 @@ public class Photo extends DataObject {
 	 * 
 	 * @methodtype get
 	 */
-	public String getPraiseAsString(ModelConfig cfg) {
+	public String getPraiseAsString(ModelConfig cfg) throws NullPointerException {
+		assertIsNonNullArgument(cfg);
 		return cfg.asPraiseString(getPraise());
 	}
 	
@@ -471,7 +474,8 @@ public class Photo extends DataObject {
 	 * 
 	 * @methodtype boolean-query
 	 */
-	public boolean hasTag(String tag) {
+	public boolean hasTag(String tag) throws NullPointerException {
+		assertIsNonNullArgument(tag);
 		return tags.hasTag(tag);
 	}
 	
@@ -500,4 +504,14 @@ public class Photo extends DataObject {
 		return creationTime;
 	}
 	
+	/**
+	 * @methodtype assertion
+	 */
+	// Method used to check if null argument is given as a parameter to methods
+	protected void assertIsNonNullArgument(Object o) throws NullPointerException {
+		if (o == null) {
+			throw new NullPointerException("The input is null.");
+		}
+	}
+
 }

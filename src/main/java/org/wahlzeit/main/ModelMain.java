@@ -163,7 +163,14 @@ public abstract class ModelMain extends AbstractMain {
 	 */
 	public void saveAll() throws SQLException {
 		PhotoCaseManager.getInstance().savePhotoCases();
-		PhotoManager.getInstance().savePhotos();			
+
+		// handle checked exception from PhotoManager class
+		try{
+			PhotoManager.getInstance().savePhotos();	
+		}
+		catch(ManagerCheckedException e) {
+			System.out.println(e.getMessage());
+		}
 		UserManager.getInstance().saveUsers();
 
 		saveGlobals();

@@ -17,7 +17,8 @@ public class CartesianCoordinate extends AbstractCoordinate {
     private double y;
     private double z;
 
-	public CartesianCoordinate(double x, double y, double z) {
+	// show thrown unchecked exception in signature for clarity
+	public CartesianCoordinate(double x, double y, double z) throws IllegalArgumentException {
 		setX(x);
 		setY(y);
 		setZ(z);
@@ -37,7 +38,7 @@ public class CartesianCoordinate extends AbstractCoordinate {
 	 * 
 	 * @methodtype set
 	 */
-    public void setX(double x) {
+    public void setX(double x) throws IllegalArgumentException {
 		assertIsValidParameter(x);
         this.x = x;
 		assertClassInvariants();
@@ -55,7 +56,7 @@ public class CartesianCoordinate extends AbstractCoordinate {
 	 * 
 	 * @methodtype set
 	 */
-    public void setY(double y) {
+    public void setY(double y) throws IllegalArgumentException {
 		assertIsValidParameter(y);
         this.y = y;
 		assertClassInvariants();
@@ -73,7 +74,7 @@ public class CartesianCoordinate extends AbstractCoordinate {
 	 * 
 	 * @methodtype set
 	 */
-    public void setZ(double z) {
+    public void setZ(double z) throws IllegalArgumentException {
 		assertIsValidParameter(z);
         this.z = z;
 		assertClassInvariants();
@@ -91,7 +92,7 @@ public class CartesianCoordinate extends AbstractCoordinate {
 	 * @methodtype boolean query method
 	 */
 	@Override 
-	public boolean isEqual(Coordinate coordinate) {
+	public boolean isEqual(Coordinate coordinate) throws IllegalArgumentException {
 		assertClassInvariants();
         // Check if distance of two coordinates is small, which means that they represent the same point.
 		boolean isEqual = getCartesianDistance(coordinate) <= EPSILON;
@@ -103,20 +104,24 @@ public class CartesianCoordinate extends AbstractCoordinate {
 	 * 
 	 */
 	@Override
-	public void writeOn(ResultSet rset) throws SQLException {
+	public void writeOn(ResultSet rset) throws SQLException, IllegalArgumentException {
+		assertClassInvariants();
 		rset.updateDouble("x_coordinate", x);
 		rset.updateDouble("y_coordinate", y);
 		rset.updateDouble("z_coordinate", z);
+		assertClassInvariants();
 	}
 
 	/**
 	 * 
 	 */
 	@Override
-	public void readFrom(ResultSet rset) throws SQLException {
+	public void readFrom(ResultSet rset) throws SQLException, IllegalArgumentException {
+		assertClassInvariants();
 		rset.getDouble("x_coordinate");
 		rset.getDouble("y_coordinate");
 		rset.getDouble("z_coordinate");
+		assertClassInvariants();
 	}
 
 	/**
@@ -131,7 +136,7 @@ public class CartesianCoordinate extends AbstractCoordinate {
 	 * @methodtype conversion
 	 */
 	@Override 
-    public SphericCoordinate asSphericCoordinate() throws ArithmeticException {
+    public SphericCoordinate asSphericCoordinate() throws ArithmeticException, IllegalArgumentException, NullPointerException {
 		assertClassInvariants();
         double radius = Math.sqrt(x*x + y*y + z*z);
 		boolean isOrigin = radius <= EPSILON;
@@ -152,7 +157,7 @@ public class CartesianCoordinate extends AbstractCoordinate {
 	 * @methodtype get
 	 */
     @Override 
-    public double getCartesianDistance(Coordinate coordinate) {
+    public double getCartesianDistance(Coordinate coordinate) throws IllegalArgumentException {
 		assertClassInvariants();
 
 		// for calculation use x, y, z Attributes of CartesianCoordinate
@@ -170,16 +175,20 @@ public class CartesianCoordinate extends AbstractCoordinate {
 	/**
 	 * @methodtype assertion
 	 */
-	protected void assertIsValidParameter(double parameter) {
-		assert !Double.isNaN(parameter) : "Parameter is NaN.";
-		assert Double.isFinite(parameter) : "Parameter is not finite.";
+	protected void assertIsValidParameter(double parameter) throws IllegalArgumentException {
+		if (Double.isNaN(parameter)) {
+			throw new IllegalArgumentException("Parameter is NaN.");
+		}
+		if (!Double.isFinite(parameter)) {
+			throw new IllegalArgumentException("Parameter is not finite.");
+		}
 	}
 
 	/**
 	 * @methodtype assertion
 	 */
 	@Override
-	protected void assertClassInvariants() {
+	protected void assertClassInvariants() throws IllegalArgumentException {
 		super.assertClassInvariants();
 		assertIsValidParameter(x);
 		assertIsValidParameter(y);

@@ -64,36 +64,36 @@ public class CartesianCoordinateTest {
             assertEquals(new SphericCoordinate(1.10714, 0.64052, 7.48331), sphericCoordinate);
         }
 
-        @Test(expected = AssertionError.class)
+        @Test(expected = IllegalArgumentException.class)
         public void testXIsNan() {
             CartesianCoordinate coordinate = new CartesianCoordinate(2,4,6);
             coordinate.setX(Double.NaN);          
         }
 
-        @Test(expected = AssertionError.class)
+        @Test(expected = IllegalArgumentException.class)
         public void testXIsInfinite() {
             CartesianCoordinate coordinate = new CartesianCoordinate(2,4,6);
             coordinate.setX(Double.POSITIVE_INFINITY);          
         }
 
-        @Test(expected = AssertionError.class)
+        @Test(expected = IllegalArgumentException.class)
         public void testYIsNan() {
             CartesianCoordinate coordinate = new CartesianCoordinate(2,4,6);
             coordinate.setY(Double.NaN);          
         }
 
-        @Test(expected = AssertionError.class)
+        @Test(expected = IllegalArgumentException.class)
         public void testYIsInfinite() {
             CartesianCoordinate coordinate = new CartesianCoordinate(2,4,6);
             coordinate.setY(Double.POSITIVE_INFINITY);          
         }
-        @Test(expected = AssertionError.class)
+        @Test(expected = IllegalArgumentException.class)
         public void testZIsNan() {
             CartesianCoordinate coordinate = new CartesianCoordinate(2,4,6);
             coordinate.setZ(Double.NaN);          
         }
 
-        @Test(expected = AssertionError.class)
+        @Test(expected = IllegalArgumentException.class)
         public void testZIsInfinite() {
             CartesianCoordinate coordinate = new CartesianCoordinate(2,4,6);
             coordinate.setZ(Double.POSITIVE_INFINITY);          

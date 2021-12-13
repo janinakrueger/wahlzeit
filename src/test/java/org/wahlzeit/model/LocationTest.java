@@ -31,4 +31,11 @@ public class LocationTest {
 
         verify(coordinate, Mockito.times(1)).readFrom(rset);
     }
+
+    @Test(expected = NullPointerException.class)
+    public void testNullArgument() {
+        Coordinate coordinate = null;
+        Location location = new Location(coordinate);
+    } 
+
 }
