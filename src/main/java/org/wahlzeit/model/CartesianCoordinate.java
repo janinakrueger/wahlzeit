@@ -2,6 +2,8 @@ package org.wahlzeit.model;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -11,19 +13,40 @@ import java.util.Objects;
 public class CartesianCoordinate extends AbstractCoordinate { 
 
 	/**
-	 * Cartesian coordinates
+	 * List that saves all instantiated coordinate objects
 	 */
-	private double x;
-    private double y;
-    private double z;
+	private static List<CartesianCoordinate> allCartesianCoordinates = new ArrayList<>();
+
+	/**
+	 * Final immutable attributes which describe the coordinate, because it is a value object.
+	 */
+	private final double x;
+    private final double y;
+    private final double z;
 
 	// show thrown unchecked exception in signature for clarity
-	public CartesianCoordinate(double x, double y, double z) throws IllegalArgumentException {
-		setX(x);
-		setY(y);
-		setZ(z);
+	private CartesianCoordinate(double x, double y, double z) throws IllegalArgumentException {
+		this.x = x;
+		this.y = y;
+		this.z = z;
 
 		assertClassInvariants();
+	}
+
+	// Method to return the value object with given parameters. 
+	// Is synchronized, so no two users can instantiate a new object which represents the same coordinate.
+	public static synchronized CartesianCoordinate getCartesianCoordinate(double x, double y, double z) {
+		CartesianCoordinate coordinate = new CartesianCoordinate(x, y, z); // new coordinate is instantiated, but only returned, if the same coordinate does not yet exist.
+		CartesianCoordinate resultCoordinate;
+		int index = allCartesianCoordinates.indexOf(coordinate);
+		if (index == -1) { // Coordinate does not yet exist
+			resultCoordinate = coordinate;
+			allCartesianCoordinates.add(resultCoordinate);
+		}
+		else { // Coordinate already exists and is taken from the list with all objects.
+			resultCoordinate = allCartesianCoordinates.get(index);
+		}
+		return resultCoordinate;
 	}
 
 	/**
@@ -38,10 +61,10 @@ public class CartesianCoordinate extends AbstractCoordinate {
 	 * 
 	 * @methodtype set
 	 */
-    public void setX(double x) throws IllegalArgumentException {
+    public CartesianCoordinate setX(double x) throws IllegalArgumentException {
 		assertIsValidParameter(x);
-        this.x = x;
 		assertClassInvariants();
+		return getCartesianCoordinate(x, this.y, this.z);
 	}
 
 	/**
@@ -56,10 +79,10 @@ public class CartesianCoordinate extends AbstractCoordinate {
 	 * 
 	 * @methodtype set
 	 */
-    public void setY(double y) throws IllegalArgumentException {
+    public CartesianCoordinate setY(double y) throws IllegalArgumentException {
 		assertIsValidParameter(y);
-        this.y = y;
 		assertClassInvariants();
+		return getCartesianCoordinate(this.x, y, this.z);
 	}
 
 	/**
@@ -74,10 +97,10 @@ public class CartesianCoordinate extends AbstractCoordinate {
 	 * 
 	 * @methodtype set
 	 */
-    public void setZ(double z) throws IllegalArgumentException {
+    public CartesianCoordinate setZ(double z) throws IllegalArgumentException {
 		assertIsValidParameter(z);
-        this.z = z;
 		assertClassInvariants();
+		return getCartesianCoordinate(this.x, this.y, z);
 	}
 
 	/**
@@ -142,11 +165,11 @@ public class CartesianCoordinate extends AbstractCoordinate {
 		boolean isOrigin = radius <= EPSILON;
 		// prevent dividing by 0
 		if(isOrigin) {
-			return new SphericCoordinate(0, 0, 0);
+			return SphericCoordinate.getSphericCoordinate(0, 0, 0);
 		}
         double theta = Math.acos(z/radius);
         double phi = Math.atan2(y,x);
-        SphericCoordinate sphericCoordinate = new SphericCoordinate(phi, theta, radius);
+        SphericCoordinate sphericCoordinate = SphericCoordinate.getSphericCoordinate(phi, theta, radius);
 
 		assertIsNonNullArgument(sphericCoordinate);
 		assertClassInvariants();

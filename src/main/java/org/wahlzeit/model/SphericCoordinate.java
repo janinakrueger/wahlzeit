@@ -2,23 +2,43 @@ package org.wahlzeit.model;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SphericCoordinate extends AbstractCoordinate {
  	/**
-	 * Spheric coordinates
+	 * Final immutable attributes which describe the coordinate, because it is a value object.
 	 */
-	private double phi;
-    private double theta;
-    private double radius;
+	private final double phi;
+    private final double theta;
+    private final double radius;
+
+	private static List<SphericCoordinate> allSphericCoordinates = new ArrayList<>(); 
 
 	// show thrown unchecked exception in signature for clarity
-	public SphericCoordinate(double phi, double theta, double radius) throws IllegalArgumentException {
-		setPhi(phi);
-		setTheta(theta);
-		setRadius(radius);
+	private SphericCoordinate(double phi, double theta, double radius) throws IllegalArgumentException {
+		this.phi = phi;
+		this.theta = theta;
+		this.radius = radius;
 
 		assertClassInvariants();
+	}
+
+	// Method to return the value object with given parameters. 
+	// Is synchronized, so no two users can instantiate a new object which represents the same coordinate.
+	// There is only one object of the same SphericCoordinate, all objects are saved in a list.
+	public static synchronized SphericCoordinate getSphericCoordinate(double phi, double theta, double radius) {
+		SphericCoordinate coordinate = new SphericCoordinate(phi, theta, radius); // new coordinate is instantiated, but only returned, if the same coordinate does not yet exist.
+		SphericCoordinate resultCoordinate;
+		int index = allSphericCoordinates.indexOf(coordinate);
+		if (index == -1) { // Coordinate does not yet exist
+			resultCoordinate = coordinate;
+			allSphericCoordinates.add(resultCoordinate);
+		}
+		else { // Coordinate already exists and is taken out of the list with all objects.
+			resultCoordinate = allSphericCoordinates.get(index);
+		}
+		return resultCoordinate;
 	}
 
 	/**
@@ -33,10 +53,10 @@ public class SphericCoordinate extends AbstractCoordinate {
 	 * 
 	 * @methodtype set
 	 */
-    public void setPhi(double phi) throws IllegalArgumentException {
+    public SphericCoordinate setPhi(double phi) throws IllegalArgumentException {
 		assertIsValidPhi(phi);
-        this.phi = phi;
 		assertClassInvariants();
+		return getSphericCoordinate(phi, theta, radius);
 	}
 
 	/**
@@ -51,10 +71,10 @@ public class SphericCoordinate extends AbstractCoordinate {
 	 * 
 	 * @methodtype set
 	 */
-    public void setTheta(double theta) throws IllegalArgumentException {
+    public SphericCoordinate setTheta(double theta) throws IllegalArgumentException {
 		assertIsValidTheta(theta);
-        this.theta = theta;
 		assertClassInvariants();
+		return getSphericCoordinate(phi, theta, radius);
 	}
 
 	/**
@@ -69,10 +89,10 @@ public class SphericCoordinate extends AbstractCoordinate {
 	 * 
 	 * @methodtype set
 	 */
-    public void setRadius(double radius) throws IllegalArgumentException {
+    public SphericCoordinate setRadius(double radius) throws IllegalArgumentException {
 		assertIsValidRadius(radius);
-        this.radius = radius;
 		assertClassInvariants();
+		return getSphericCoordinate(phi, theta, radius);
 	}
 
 	/**
@@ -108,7 +128,7 @@ public class SphericCoordinate extends AbstractCoordinate {
         double x = radius*Math.sin(theta)*Math.cos(phi);
         double y = radius*Math.sin(theta)*Math.sin(phi);
         double z = radius*Math.cos(theta);
-        CartesianCoordinate cartesianCoordinate = new CartesianCoordinate(x, y, z);
+        CartesianCoordinate cartesianCoordinate = CartesianCoordinate.getCartesianCoordinate(x, y, z);
 
 		assertIsNonNullArgument(cartesianCoordinate);
 		assertClassInvariants();
