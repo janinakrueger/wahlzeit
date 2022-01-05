@@ -6,9 +6,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import org.wahlzeit.annotations.PatternInstance;
+
 /**
  * Cartesian coordinates of a location.
  */
+
+@PatternInstance( 
+	patternName = "Value Object",
+	participants = {"Value Object"}
+)
 
 public class CartesianCoordinate extends AbstractCoordinate { 
 

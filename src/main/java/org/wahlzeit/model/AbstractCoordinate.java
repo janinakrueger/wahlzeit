@@ -3,7 +3,13 @@ package org.wahlzeit.model;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import org.wahlzeit.annotations.PatternInstance;
 import org.wahlzeit.services.DataObject;
+
+@PatternInstance( 
+	patternName = "Template Method",
+	participants = {"AbstractClass"}
+)
 
 public abstract class AbstractCoordinate extends DataObject implements Coordinate{
 
