@@ -60,5 +60,12 @@ public class LandscapePhotoFactory extends PhotoFactory {
 	public Photo createPhoto(ResultSet rs) throws SQLException {
 		return new LandscapePhoto(rs);
 	}
+
+	// create a photo using Landscape attribute
+	public Photo createPhoto(String typeName, Location location) {
+		LandscapeManager manager = LandscapeManager.getInstance();
+		Landscape landscape = manager.createLandscape(typeName, location);
+		return new LandscapePhoto(landscape);
+	}
 	
 }

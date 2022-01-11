@@ -5,12 +5,22 @@ import java.sql.SQLException;
 
 public class LandscapePhoto extends Photo {
 
+	private Landscape landscape;
 	/**
-	 * 
 	 * @methodtype constructor
 	 */
 	public LandscapePhoto() {
 		super();
+	}
+
+	/**
+	 * 
+	 * @methodtype constructor
+	 * New constructor using Landscape attribute.
+	 */
+	public LandscapePhoto(Landscape landscape) {
+		super();
+		setLandscape(landscape);
 	}
 	
 	/**
@@ -29,4 +39,10 @@ public class LandscapePhoto extends Photo {
 		super(rset);
 	}
 
+	public Landscape getLandscape() {
+		return landscape;
+	}
+	public void setLandscape(Landscape landscape) {
+		this.landscape = landscape;
+	}
 }
