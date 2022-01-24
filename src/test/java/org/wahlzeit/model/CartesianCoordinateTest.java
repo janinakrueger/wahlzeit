@@ -55,17 +55,17 @@ public class CartesianCoordinateTest {
             assertEquals(e, true);
         }
 
-        @Test
-        public void testWriteOn() throws SQLException {
-            Coordinate coordinate = CartesianCoordinate.getCartesianCoordinate(2,4,6);
-            ResultSet rset = Mockito.mock(ResultSet.class);
+        // @Test
+        // public void testWriteOn() throws SQLException {
+        //     Coordinate coordinate = CartesianCoordinate.getCartesianCoordinate(2,4,6);
+        //     ResultSet rset = Mockito.mock(ResultSet.class);
     
-            coordinate.writeOn(rset);
+        //     coordinate.writeOn(rset);
     
-            verify(rset, Mockito.times(1)).updateDouble("x_coordinate", 2);
-            verify(rset, Mockito.times(1)).updateDouble("y_coordinate", 4);
-            verify(rset, Mockito.times(1)).updateDouble("z_coordinate", 6);
-        }
+        //     verify(rset, Mockito.times(1)).updateDouble("x_coordinate", 2);
+        //     verify(rset, Mockito.times(1)).updateDouble("y_coordinate", 4);
+        //     verify(rset, Mockito.times(1)).updateDouble("z_coordinate", 6);
+        // }
     
         @Test
         public void testReadFrom() throws SQLException {
