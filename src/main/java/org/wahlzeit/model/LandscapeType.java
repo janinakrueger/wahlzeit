@@ -3,13 +3,21 @@ package org.wahlzeit.model;
 import java.util.HashSet;
 import java.util.Set;
 
+// Object creation table
+// Delegation: separate-object
+// Selection: on-the-spot
+// Configuration: in-code
+// Instantiation: in-code
+// Initialization: default
+// Building: default
+
 public class LandscapeType {
     protected LandscapeType superType = null;
     protected Set<LandscapeType> subTypes = new HashSet<LandscapeType>();
     String typeName;
 
     // Give LandscapeType a String name
-    public LandscapeType(String name) {
+    public LandscapeType(String name) { // 2. Constructor is called by LandscapeManager
         if(name == null) {
             throw new IllegalArgumentException("Null argument was given.");
         }
@@ -17,7 +25,7 @@ public class LandscapeType {
     }
 
     // Create object Landscape with LandscapeType this
-    public Landscape createInstance(Location location) {
+    public Landscape createInstance(Location location) { // 2. LandscapeType uses the contructor of Landscape to create an object
         return new Landscape(this, location);
     }
 
@@ -47,7 +55,9 @@ public class LandscapeType {
     }
 
     public boolean isSubtype(LandscapeType lt) {
-        assert (lt != null) : "Asked about null object.";
+        if(lt == null) {
+            throw new IllegalArgumentException("Asked about null object.");
+        }
         if(lt.getType().equals(this.getType())) {
             return true;
         }

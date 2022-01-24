@@ -22,7 +22,7 @@ public class LandscapePhotoManager extends PhotoManager {
 	 * 
 	 */
 	@Override
-	protected Photo createObject(ResultSet rset) throws SQLException {
+	protected Photo createObject(ResultSet rset) throws SQLException { // 1. Start of object creation for LandscapePhoto
 		return LandscapePhotoFactory.getInstance().createPhoto(rset);
 	}
 

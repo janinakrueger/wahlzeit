@@ -57,7 +57,7 @@ public class LandscapePhotoFactory extends PhotoFactory {
 	 * 
 	 */
     @Override
-	public Photo createPhoto(ResultSet rs) throws SQLException {
+	public Photo createPhoto(ResultSet rs) throws SQLException { // 2. Called by LandscapePhotoManager, calls constructor of LandscapePhoto
 		return new LandscapePhoto(rs);
 	}
 
